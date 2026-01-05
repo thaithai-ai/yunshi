@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 丙午·天机系统</title>
+    <style>
+        :root {
+            --bg-color: #050505;
+            --neon-red: #ff2a2a;
+            --neon-green: #00ff41;
+            --neon-blue: #00f3ff; /* 新增蓝色，代表星象 */
+            --text-color: #e0e0e0;
+            --glass: rgba(255, 42, 42, 0.1);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: rgba(10, 10, 10, 0.9);
+            border: 1px solid var(--neon-red);
+            padding: 2rem;
+            box-shadow: 0 0 20px var(--glass);
+            position: relative;
+        }
+
+        .corner {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border: 2px solid var(--neon-green);
+            transition: all 0.3s;
+        }
+        .tl { top: -2px; left: -2px; border-right: 0; border-bottom: 0; }
+        .tr { top: -2px; right: -2px; border-left: 0; border-bottom: 0; }
+        .bl { bottom: -2px; left: -2px; border-right: 0; border-top: 0; }
+        .br { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
+
+        h1 {
+            text-align: center;
+            color: var(--neon-red);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px var(--neon-red);
+        }
+
+        .sub-title {
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--neon-blue);
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--neon-green);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        /* 样式化日期输入框 */
+        input[type="date"], select {
+            width: 100%;
+            padding: 12px;
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            box-sizing: border-box; /* 确保不撑破容器 */
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 10px;
+            background: transparent;
+            border: 1px solid var(--neon-red);
+            color: var(--neon-red);
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        button:hover {
+            background: var(--neon-red);
+            color: #000;
+            box-shadow: 0 0 30px var(--neon-red);
+        }
+
+        #result-area {
+            margin-top: 30px;
+            display: none;
+            border-top: 1px dashed #333;
+            padding-top: 20px;
+        }
+
+        .user-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            margin-right: 5px;
+            margin-bottom: 15px;
+        }
+
+        .loading {
+            text-align: center;
+            display: none;
+            color: var(--neon-green);
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        
+        /* 简单的闪烁动画 */
+        .blink { animation: blinker 1s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="corner tl"></div><div class="corner tr"></div>
+    <div class="corner bl"></div><div class="corner br"></div>
+
+    <h1>☯ 2026 丙午 ☯</h1>
+    <div class="sub-title">A.I. DESTINY CALCULATOR v2.0</div>
+
+    <div class="input-group">
+        <label for="birthdate">出生日期 / DATE OF BIRTH</label>
+        <input type="date" id="birthdate" required>
+    </div>
+
+    <div class="input-group">
+        <label for="mbti">MBTI 人格类型 / COGNITION</label>
+        <select id="mbti">
+            <option value="" disabled selected>-- 选择你的类型 --</option>
+            <optgroup label="Analysts (分析家)">
+                <option value="INTJ">INTJ (建筑师)</option>
+                <option value="INTP">INTP (逻辑学家)</option>
+                <option value="ENTJ">ENTJ (指挥官)</option>
+                <option value="ENTP">ENTP (辩论家)</option>
+            </optgroup>
+            <optgroup label="Diplomats (外交家)">
+                <option value="INFJ">INFJ (提倡者)</option>
+                <option value="INFP">INFP (调停者)</option>
+                <option value="ENFJ">ENFJ (主人公)</option>
+                <option value="ENFP">ENFP (竞选者)</option>
+            </optgroup>
+            <optgroup label="Sentinels (守护者)">
+                <option value="ISTJ">ISTJ (物流师)</option>
+                <option value="ISFJ">ISFJ (守卫者)</option>
+                <option value="ESTJ">ESTJ (总经理)</option>
+                <option value="ESFJ">ESFJ (执政官)</option>
+            </optgroup>
+            <optgroup label="Explorers (探险家)">
+                <option value="ISTP">ISTP (鉴赏家)</option>
+                <option value="ISFP">ISFP (探险家)</option>
+                <option value="ESTP">ESTP (企业家)</option>
+                <option value="ESFP">ESFP (表演者)</option>
+            </optgroup>
+        </select>
+    </div>
+
+    <button onclick="calculateAndReveal()">启动演算 / EXECUTE</button>
+
+    <div class="loading" id="loading">
+        [Analyzing Star Charts] <span class="blink">_</span><br>
+        [Calculating I Ching] <span class="blink">_</span>
+    </div>
+
+    <div id="result-area">
+        </div>
+</div>
+
+<script>
+    // ==========================================
+    // 1. 静态数据库 (部分示例)
+    // ==========================================
+    const fortuneDatabase = {
+        // 这里的 Key 依然主要依靠生肖+MBTI，但文案生成时我们会动态插入星座
+        "鼠_INTJ": {
+            keyword: "逆流筑堤",
+            score: 75,
+            analysis: "2026丙午火年，子午相冲。作为{sign}的INTJ，外界的非理性冲突会挑战你的底线。火年的能量极不稳定，但对于擅长深谋远虑的你来说，这是在混乱中重塑秩序的绝佳机会。",
+            lucky_item: "液冷散热器 / 降噪耳塞"
+        },
+        "马_ESFP": {
+            keyword: "过载熔断",
+            score: 60,
+            analysis: "本命年值太岁，加上ESFP本身的高能量，2026年你就像一台超频运行的显卡。作为{sign}，你的情绪波动会被放大，切忌因为一时冲动而做出戏剧性的决定。",
+            lucky_item: "黑曜石冰球 / 冥想App"
+        }
+        // ... 你可以按格式添加更多
+    };
+
+    // ==========================================
+    // 2. 核心算法工具
+    // ==========================================
+
+    // 计算生肖 (基于1900年是鼠年的简单取模算法)
+    function getChineseZodiac(year) {
+        const animals = ['猴', '鸡', '狗', '猪', '鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊'];
+        return animals[year % 12];
+    }
+
+    // 计算星座 (根据月日)
+    function getWesternZodiac(month, day) {
+        const s = "摩羯水瓶双鱼白羊金牛双子巨蟹狮子处女天秤天蝎射手摩羯";
+        const arr = [20, 19, 21, 21, 21, 22, 23, 23, 23, 23, 22, 22];
+        // 这里的逻辑：如果日期小于分隔日，就是前一个星座，否则是后一个
+        const index = month - 1; // 0-11
+        if (day < arr[index]) {
+            return s.substr(index * 2, 2) + "座";
+        } else {
+            return s.substr((index + 1) * 2, 2) + "座";
+        }
+    }
+
+    // ==========================================
+    // 3. 业务逻辑
+    // ==========================================
+    
+    function calculateAndReveal() {
+        const birthInput = document.getElementById('birthdate').value;
+        const mbti = document.getElementById('mbti').value;
+        const resultArea = document.getElementById('result-area');
+        const loading = document.getElementById('loading');
+
+        if (!birthInput || !mbti) {
+            alert("❌ 数据缺失：请输入完整的出生日期和MBTI类型");
+            return;
+        }
+
+        // 解析日期
+        const dateObj = new Date(birthInput);
+        const year = dateObj.getFullYear();
+        const month = dateObj.getMonth() + 1; // JS月份是0-11
+        const day = dateObj.getDate();
+
+        // 自动计算生肖和星座
+        const zodiac = getChineseZodiac(year);
+        const sign = getWesternZodiac(month, day);
+
+        // UI 交互
+        resultArea.style.display = 'none';
+        loading.style.display = 'block';
+
+        // 模拟计算延迟
+        setTimeout(() => {
+            const fortune = getFortune(zodiac, sign, mbti);
+            renderResult(zodiac, sign, mbti, fortune);
+            loading.style.display = 'none';
+            resultArea.style.display = 'block';
+        }, 1500);
+    }
+
+    // 获取或生成运势
+    function getFortune(zodiac, sign, mbti) {
+        const key = `${zodiac}_${mbti}`;
+        let data = null;
+
+        // A. 尝试从数据库读取
+        if (fortuneDatabase[key]) {
+            // 深拷贝对象以免修改原数据
+            data = JSON.parse(JSON.stringify(fortuneDatabase[key]));
+            // 替换占位符 {sign} 为实际星座
+            data.analysis = data.analysis.replace(/{sign}/g, sign);
+        } else {
+            // B. 动态生成兜底文案
+            data = generateFallbackFortune(zodiac, sign, mbti);
+        }
+        return data;
+    }
+
+    // 通用推演算法 (加入了星座的影响)
+    function generateFallbackFortune(zodiac, sign, mbti) {
+        const isFireYear = true;
+        const isIntrovert = mbti.startsWith('I');
+        
+        let zText = "平稳";
+        let score = 75;
+
+        // 简单生肖逻辑
+        if (['马', '鼠', '牛'].includes(zodiac)) {
+            zText = "动荡";
+            score -= 10;
+        } else if (['虎', '羊', '狗'].includes(zodiac)) {
+            zText = "得势";
+            score += 10;
+        }
+
+        // 简单星座逻辑 (火象/风象/水象/土象)
+        let signElement = "";
+        if (['白羊座', '狮子座', '射手座'].includes(sign)) signElement = "Fire"; // 火象
+        if (['双子座', '天秤座', '水瓶座'].includes(sign)) signElement = "Air"; // 风象
+        if (['巨蟹座', '天蝎座', '双鱼座'].includes(sign)) signElement = "Water"; // 水象
+        if (['金牛座', '处女座', '摩羯座'].includes(sign)) signElement = "Earth"; // 土象
+
+        // 生成分析文案
+        let analysis = `2026丙午火年，生肖属${zodiac}的你正处于“${zText}”周期。`;
+        
+        if (signElement === "Fire") {
+            analysis += `加上${sign}本身的热烈特质，今年你与太岁火气相投，但需警惕“过热”导致的精力透支。`;
+        } else if (signElement === "Water") {
+            analysis += `虽然${sign}的水象特质让你情感细腻，但在火旺之年，需防备情绪的剧烈蒸发（内耗）。`;
+        } else if (signElement === "Earth") {
+            analysis += `${sign}的稳重是你今年最大的护身符，能有效对冲环境的躁动。`;
+        } else {
+            analysis += `${sign}的风象特质将助你借火势扶摇直上，但也容易在选择中迷失。`;
+        }
+
+        analysis += ` 结合${mbti}的认知模式，建议你今年${isIntrovert ? '向内求索，建立屏蔽力' : '向外连接，但保持边界'}。`;
+
+        return {
+            keyword: `${zodiac} · ${sign} · 变局`,
+            score: score,
+            analysis: analysis,
+            career: `发挥${mbti}优势，在${zText}中寻找机会。`,
+            love: `作为${sign}，保持真诚比套路更重要。`,
+            warning: "切勿在深夜做重大财务决定。",
+            lucky_item: "复古机械表 / 钛钢饰品"
+        };
+    }
+
+    function renderResult(zodiac, sign, mbti, data) {
+        let scoreColor = data.score >= 80 ? '#00ff41' : (data.score >= 60 ? '#ffa500' : '#ff2a2a');
+        
+        const html = `
+            <div style="margin-bottom: 20px;">
+                <span class="user-tag">PROTOCAL: ${zodiac} (生肖)</span>
+                <span class="user-tag">STAR: ${sign} (星座)</span>
+                <span class="user-tag">CORE: ${mbti}</span>
+            </div>
+
+            <div style="border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="color:var(--neon-green); font-size:0.8rem; font-weight:bold;">KEYWORD</div>
+                    <h2 style="color: var(--neon-red); margin: 5px 0 0 0; text-shadow:0 0 5px var(--neon-red);">${data.keyword}</h2>
+                </div>
+                <div style="text-align:right;">
+                    <div style="color:var(--neon-green); font-size:0.8rem; font-weight:bold;">ENERGY</div>
+                    <div style="font-size: 2rem; font-weight:bold; color: ${scoreColor};">${data.score}%</div>
+                </div>
+            </div>
+            
+            <p style="font-size: 0.95rem; line-height: 1.6; color:#ccc;">${data.analysis}</p>
+            
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top:20px;">
+                <div style="background:rgba(255,255,255,0.05); padding:10px;">
+                    <div style="color:var(--neon-blue); font-size:0.7rem; margin-bottom:5px;">CAREER</div>
+                    <div style="font-size: 0.85rem;">${data.career || data.analysis.substring(0,20)+'...'}</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.05); padding:10px;">
+                    <div style="color:var(--neon-blue); font-size:0.7rem; margin-bottom:5px;">LOVE</div>
+                    <div style="font-size: 0.85rem;">${data.love || '顺其自然，保持真诚。'}</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; padding: 12px; border: 1px solid var(--neon-red); background: rgba(255, 42, 42, 0.05); font-size: 0.9rem;">
+                <span style="color: var(--neon-red); font-weight:bold;">⚠️ WARNING:</span> ${data.warning || '注意休息，避免过劳。'}
+            </div>
+
+            <div style="margin-top: 15px; text-align: center;">
+                <span style="color: var(--neon-green); font-size: 0.8rem;">[ Lucky Artifact ]</span><br>
+                <span style="font-size: 1.1rem; border-bottom: 1px dashed #666;">${data.lucky_item}</span>
+            </div>
+        `;
+        document.getElementById('result-area').innerHTML = html;
+    }
+</script>
+
+</body>
+</html>
